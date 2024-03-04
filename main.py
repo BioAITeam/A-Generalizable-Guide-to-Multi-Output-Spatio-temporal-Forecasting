@@ -15,12 +15,12 @@ log.setLevel(logging.ERROR)
 
 parser = argparse.ArgumentParser(description='Time series forecasting program')
 parser.add_argument("--data_dir", help="folder of the dataset", default="datasets")
-parser.add_argument("--models", help="Models used on the genetic algoritm can be RNN, TCN, NBEATS, TFT you can provide multiples with comas without any space", default="RNN,TCN,NBEATS,TFT")
+parser.add_argument("--models", help="Models used on the genetic algorithm can be RNN, TCN, NBEATS, TFT you can provide multiples with comas without any space", default="RNN,TCN,NBEATS,TFT")
 parser.add_argument("--recursive", help="Prediction on models in recursive way can be True or False", default=True)
 parser.add_argument("--tt_split", help="Percentage of the train set from 0 to 1",default="0.8")
 parser.add_argument("--generations", help="amount of generations of the genetic algorithm",default="10")
 parser.add_argument("--top", help="top models for cross on the genetic algorithm",default="5")
-parser.add_argument("--cross", help="amount of crosses on the genetic algorithhm",default="4")
+parser.add_argument("--cross", help="amount of crosses on the genetic algorithm",default="4")
 parser.add_argument("--init_pop", help="Initial population of the genetic algorithm",default="20")
 parser.add_argument("--log_dir", help="Results of Model genetic Training",default="logs")
 parser.add_argument("--mode", help="the mode of use of the script: Genetic for a genetic algoritm, Train for train a model with defined hyperparameters and Test for testing the model",default="Genetic")
@@ -28,6 +28,7 @@ parser.add_argument("--weights_dir", help="Weights of Model Training",default="w
 parser.add_argument("--epoch",help="Epoch on Genetic or Train mode", default="50")
 parser.add_argument("--pred_dir", help="dataframe of the predictions",default="predictions")
 parser.add_argument("--n_pred", help="prediction horizon by default the amount of outputs",default="Output")
+parser.add_argument("--output", help="Fixed output for the genetic algorithm",default=False)
 
 args = parser.parse_args()
 
@@ -45,6 +46,7 @@ wei_dir = args.weights_dir
 Mode = args.mode
 epoch = int(args.epoch)
 pred_dir = args.pred_dir
+output = args.output
 if Mode == 'Genetic':
     Best_model =pd.DataFrame(columns=['Model','Dataset',"Fitness","Recursive"]) 
     for names in data_names:
@@ -52,7 +54,7 @@ if Mode == 'Genetic':
         train,test = data_preprocess(names,data_dir,tt_split)
         for model_name in models:
             Best = Genetic_algoritm (train, test, recursive = recursive, Generations = gen, top = top,
-                                      cross = crs, init_pop = pop, model_name = model_name, epoch=epoch)
+                                      cross = crs, init_pop = pop, model_name = model_name, epoch=epoch,output=output)
             df_g = make_dict(Best,model_name,names,recursive)
             df_g.to_csv(log_dir+"/Results_"+names+"_"+model_name+".csv", mode='a', index=False)
 elif Mode == 'Train':

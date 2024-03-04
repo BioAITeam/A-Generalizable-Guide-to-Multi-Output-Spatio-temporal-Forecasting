@@ -1,10 +1,10 @@
 import random
-from tqdm import tqdm
+from stqdm import stqdm
 import pandas as pd
 import numpy as np
 from darts.metrics import r2_score, mse
 from Model import *
-from darts.dataprocessing.transformers import Mapper
+import streamlit as st
 
 
 def mutation(individual, parameters_bounds, mutation_rate, exp = []):
@@ -81,24 +81,21 @@ def initialize_population(pop_size, parameters_bounds,exp = []):
         population.append(individual)
     return population
 
-def Genetic_algoritm (train_set, test_set, recursive, Generations, top, cross, init_pop, model_name,output = False):
+def Genetic_algoritm (train_set, test_set, recursive, Generations, top, cross, init_pop, model_name, epoch,output = False):
   parameters_bounds = choose_parameters(model_name)
   population_param = initialize_population(init_pop, parameters_bounds)
   scores = []
   gen = 1
-  for param in tqdm(population_param):
+  for param in stqdm(population_param):
     if output:
       param[1] = output
-    model = Model_selection(model_name, param, recursive)
+    model = Model_selection(model_name, param, recursive, epoch)
     model.fit(train_set, verbose = False)
     forecast = model.historical_forecasts(test_set,start=test_set.get_timestamp_at_point(param[0]),forecast_horizon=param[1],retrain=False,verbose=False)
-    transformer = Mapper(lambda x: x+2)
-    test_set = transformer.transform(test_set)
-    forecast = transformer.transform(forecast)
-    scores.append(r2_score(test_set, forecast))
+    scores.append(r2_score(test_set.map(lambda x:x+1), forecast.map(lambda x:x+1)))
   best_individual = population_param[scores.index(max(scores))]
   best_fitness = max(scores)
-  print(f"Generation 1: Model = {model_name}, Best individual = {best_individual}, Fitness = {best_fitness}")
+  st.write(f"Generation 1: Model = {model_name}, Best individual = {best_individual}, Fitness = {best_fitness}")
   Best = np.array([[gen]+best_individual+[best_fitness]])
   for i in range(2,Generations+1):
     selected_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=False)[:top]
@@ -113,22 +110,17 @@ def Genetic_algoritm (train_set, test_set, recursive, Generations, top, cross, i
       child = mutation(child, parameters_bounds, 0.1)
       population_param.append(child)
       new_population +=1
-
-    for param in tqdm(population_param[pop_index:]):
-      if output:
-        param[1] = output
+    
+    for param in stqdm(population_param[pop_index:]):
       model = Model_selection(model_name, param, recursive = False)
       model.fit(train_set, verbose = False)
       forecast = model.historical_forecasts(test_set,start=test_set.get_timestamp_at_point(param[0]),forecast_horizon=param[1],retrain=False,verbose=False)
-      transformer = Mapper(lambda x: x+2)
-      test_set = transformer.transform(test_set)
-      forecast = transformer.transform(forecast)
-      scores.append(r2_score(test_set, forecast))
-
+      scores.append(r2_score(test_set.map(lambda x:x+1), forecast.map(lambda x:x+1)))
+    
     # Print the best individual and its fitness score for each generation
     best_individual = population_param[scores.index(max(scores))]
     best_fitness = max(scores)
-    print(f"Generation {i}: Model = {model_name}, Best individual = {best_individual}, Fitness = {best_fitness}")
+    st.write(f"Generation {i}: Model = {model_name}, Best individual = {best_individual}, Fitness = {best_fitness}")
     Best2 = np.array([[int(i)]+best_individual+[best_fitness]])
     Best = np.append(Best, Best2, axis=0)
 
