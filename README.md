@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Time series using Genetic Algoritm
 Este proyecto consisten en la generacion de un algoritmo que encuentra hyperparametros, entrena y testea el alcance de una base de datos con 4 modelos RNN, TCN, NBEATS y TFT.
 
@@ -41,3 +42,7 @@ Este algoritmo utiliza la base de datos en la carpeta **datasets** y  los pesos 
 ## Interfaz Grafica
 Para ejecutar localmente la interfaz grafica usar el comando:
 `streamlit run Streamlit.py`
+=======
+# A-Generalizable-Guide-to-Multi-Output-Spatio-temporal-Forecasting
+Building Better Forecasting Pipelines: A Generalizable Guide to Multi-Output Spatio-temporal Forecasting
+>>>>>>> a455acb2e5cd4ad9ebbab01bf5e8e2d7964d10a8
