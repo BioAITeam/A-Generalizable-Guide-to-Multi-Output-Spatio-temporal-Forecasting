@@ -10,7 +10,7 @@ This algorithm has 3 modes:
 ### Genetic
 This mode occurs when running:
 
-`python main.py --mode Genetic` o `python main.py`
+`python main.py --mode Genetic` or `python main.py`
 
 What this algorithm does is to look for the databases inside the **datasets** folder (which can be changed with the `--data_dir` command) which must have the following format in which the Date column is the first one and has to be the time stamps, dates or other time format, followed by the columns of the time series values so they depend on the location, in case of having more than one location they are added in separate columns.
 
@@ -20,28 +20,29 @@ What this algorithm does is to look for the databases inside the **datasets** fo
 | Timestamp 2 | Value 2 - Location 1 | Value 2 - Location N |
 | Timestamp N | Value N - Location 1 | Value N - Location N |
 
-Posteriormente este algoritmo ejecuta un algoritmo genetico y los mejores resultados se pueden observar en la carpeta **logs** (la cual puede ser cambiada con el comando `--log_dir`)
-si se desean cambiar los valores del algoritmo genetico puede usar `-h` para ver las opciones extras.
+Subsequently this algorithm runs a genetic algorithm and the best results can be observed in a **logs** folder (which can be changed with the `--log_dir` command).
+if you want to change the values of the genetic algorithm you can use `-h` to see the extra options.
 
 ### Train
-Este modo se da cuando se ejecuta:
+This mode occurs when running:
 
 `python main.py --mode Train`
 
-Este algoritmo utiliza la base de datos dentron de la carpeta **datasets** y los resultados del algoritmo genetico de la carpeta **logs** y entrena el modelo guardandolo en la carpeta **weights** (la cual puede ser cambiada con el comando `--weights_dir`), es importante que si desea mejorar la metrica debe de aumentar las epocas con el comanddo `--epoch`.
+This algorithm uses the database inside the **datasets** folder and the results of the genetic algorithm from the **logs** folder and trains the model by saving it in a **weights** folder (which can be changed with the `--weights_dir` command), it is important that if you want to improve the metric you should increase the epochs with the `--epoch` command.
 
 ### Test
-Este modo se da cuando se ejecuta:
+This mode occurs when running:
 
 `python main.py --mode Test`
 
-Este algoritmo utiliza la base de datos en la carpeta **datasets** y  los pesos en la carpeta **weights** para realizar una prediccion de los siguientes valores para cambiar la cantidad de valores a predecir utilice el comando 	`--n_pred`, y este generara un archivo csv con la prediccion y lo guardar en la carpeta **predictions** (la cual puede ser cambiada con el comando `--pred_dir`)
+This algorithm uses the database in the **datasets** folder and the weights in the **weights** folder to make a prediction of the following values to change the amount of values to predict use the command `--n_pred`, and it will generate a csv file with the prediction and save it in a **predictions** folder (which can be changed with the command `--pred_dir`)
 
 
-## Interfaz Grafica
-Para ejecutar localmente la interfaz grafica usar el comando:
+## Graphic Interface
+There is a graphic interface that have all the Execution modes above, it can be access by executing the following command:
 `streamlit run Streamlit.py`
-=======
+
+
 
 
 
